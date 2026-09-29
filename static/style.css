@@ -231,3 +231,11 @@ footer p{margin:0 0 10px;max-width:62ch}
 .park a{display:inline-block;margin-top:6px}
 .p-badge{display:grid;place-items:center;width:26px;height:26px;border-radius:6px;background:#3E86C8;color:#fff;font:700 15px/1 var(--display)}
 .meet .walk{display:block;width:100%;height:auto;border-radius:10px;border:1px solid var(--moss-2)}
+
+/* маршрут: карта и повороты одной высоты, точка сбора на всю ширину под ними */
+.route{grid-template-columns:minmax(0,440px) 1fr;column-gap:48px;row-gap:28px;align-items:stretch}
+.route .legs{display:flex;flex-direction:column;justify-content:space-between}
+.route .meet{grid-column:1/-1;margin-top:0;display:grid;grid-template-columns:1fr minmax(0,420px);gap:24px;align-items:start;padding:22px}
+.route .meet-info{display:grid;gap:12px}
+.route .note{grid-column:1/-1;margin-top:-12px}
+@media (max-width:860px){.route{grid-template-columns:1fr}.route .meet{grid-template-columns:1fr}}
