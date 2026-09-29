@@ -288,7 +288,6 @@ def build_index(posts):
         <div class="map">
           {route_svg}
         </div>
-        <div>
           <ol class="legs">
             <li><div class="km">0,0</div><div><b>Сбор и старт</b><span>{e(meet['label'])}. Собираемся в {CFG['run']['gather']}, стартуем ровно в {CFG['run']['time']}.</span></div></li>
             <li><div class="km">0–3,0</div><div><b>Просека на север</b><span>Три километра по прямой через Мытищинский лесопарк.</span></div></li>
@@ -299,6 +298,7 @@ def build_index(posts):
             <li><div class="km">10</div><div><b>Финиш</b><span>Там же, где старт. Около 21:00.</span></div></li>
           </ol>
           <div class="meet">
+            <div class="meet-info">
             <div class="eyebrow">Точка сбора</div>
             <div class="coords"><code id="coords">{meet['lat']:.6f}, {meet['lon']:.6f}</code><button class="btn sm ghost" id="copyCoords" type="button">Скопировать</button></div>
             <div class="links">
@@ -309,6 +309,7 @@ def build_index(posts):
               <span class="p-badge" aria-hidden="true">P</span>
               <div><b>Парковка у ТЦ «Июнь»</b>, ул. Мира, 51. До старта около 250 метров, 3–4 минуты пешком: через ул. Мира и Волковское шоссе по двум переходам со светофорами. По данным справочников, первые 3 часа бесплатно, этого хватает на пробежку со сбором. Условия лучше проверить на въезде.
               <a href="https://yandex.ru/maps/org/iyun/30007788202/" target="_blank" rel="noopener">ТЦ «Июнь» на Яндекс Картах</a></div>
+            </div>
             </div>
             <svg class="walk" viewBox="0 0 360 230" role="img" aria-label="Как дойти от парковки ТЦ «Июнь» до старта: через ул. Мира и Волковское шоссе по двум переходам со светофорами">
                 <rect width="360" height="230" fill="#101915"/>
@@ -334,7 +335,6 @@ def build_index(posts):
               </svg>
           </div>
           <p class="note">Схема построена по GPX-треку пробежки 24 сентября 2026. Точный трек ровно на 10 км скоро выложим.</p>
-        </div>
       </div>
     </div>
   </section>
