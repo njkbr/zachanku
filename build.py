@@ -191,6 +191,38 @@ def post_card(p, depth):
             f'<h3>{e(p["title"])}</h3><p>{e(p["description"])}</p><span class="more">Читать →</span></a>')
 
 
+
+def _deg(t):
+    if t is None:
+        return ""
+    return ("+" if t > 0 else "−" if t < 0 else "") + str(abs(int(t))) + " °C"
+
+
+def render_weather(w, run):
+    """Блок прогноза для ближайшей пробежки. Пустая строка, если прогноза нет или он не на этот четверг."""
+    if not w or not w.get("run") or w["run"] != run.strftime("%Y-%m-%dT%H:%M"):
+        return ""
+    meet = CFG["meet"]
+    ya = f"https://yandex.ru/pogoda/?lat={meet['lat']}&lon={meet['lon']}"
+    main = f"<b>{_deg(w.get('temp'))}</b>"
+    if w.get("feels") is not None and w.get("feels") != w.get("temp"):
+        main += f" <span>ощущается как {_deg(w['feels'])}</span>"
+    if w.get("text"):
+        main += f" <span>· {e(w['text'])}</span>"
+    row = []
+    if w.get("precip_prob") is not None:
+        row.append(f"осадки {w['precip_prob']}%")
+    if w.get("wind") is not None:
+        row.append(f"ветер {w['wind']} м/с")
+    tips = "".join(f"<li>{e(t)}</li>" for t in w.get("tips", []))
+    return (f'<div class="weather" id="weather" data-run="{e(w["run"])}">'
+            f'<div class="w-main">{main}</div>'
+            + (f'<div class="w-row">{" · ".join(row)}</div>' if row else "")
+            + (f'<ul class="w-tips">{tips}</ul>' if tips else "")
+            + f'<div class="w-src">Прогноз на 20:00–21:00 у точки сбора · данные '
+              f'<a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a> (CC BY 4.0) · '
+              f'<a href="{e(ya)}" target="_blank" rel="noopener">Подробнее на Яндекс Погоде →</a></div></div>')
+
 # ---------- главная ----------
 def build_index(posts):
     run = next_thursday()
@@ -203,6 +235,12 @@ def build_index(posts):
                     "text": "Завтра бежим! Прогноз +6 °C, без осадков. У Чанки после дождей мокро, берите обувь с протектором.",
                     "url": TG}
     announce_json = json.dumps(announce, ensure_ascii=False).replace("</", "<\\/")
+    weather_path = ROOT / "data" / "weather.json"
+    weather = json.loads(weather_path.read_text(encoding="utf-8")) if weather_path.exists() else {}
+    if ARTIFACT and not weather:  # пример прогноза только для превью
+        weather = {"run": run.strftime("%Y-%m-%dT%H:%M"), "temp": 6, "feels": 3, "precip_prob": 20,
+                   "wind": 4, "text": "пасмурно", "tips": []}
+    weather_html = render_weather(weather, run)
     yandex = f"https://yandex.ru/maps/?pt={meet['lon']},{meet['lat']}&z=17&l=map"
 
     event = {
@@ -263,6 +301,7 @@ def build_index(posts):
         <b id="nextDate">чт, {run.day} {MONTHS[run.month - 1]}, 20:00</b>
         <span id="nextIn"></span>
       </div>
+      {weather_html}
       <div class="announce" id="announce" hidden><b>Анонс из канала</b><p></p><a href="{TG}" target="_blank" rel="noopener">Открыть пост в Telegram →</a></div>
       <script type="application/json" id="announce-data">{announce_json}</script>
     </div>
@@ -283,7 +322,7 @@ def build_index(posts):
     <div class="wrap">
       <div class="eyebrow">Маршрут</div>
       <h2>Три километра по прямой, потом зигзаг за Чанку</h2>
-      <p class="lead">Маршрут туда и обратно: убегаем на 5 км, разворачиваемся и возвращаемся тем же путём. Старт и финиш в одной точке. Трасса освещена, заблудиться сложно.</p>
+      <p class="lead">Маршрут туда и обратно: убегаем на 5 км, разворачиваемся и возвращаемся тем же путём. Старт и финиш в одной точке. Трасса освещена, заблудиться сложно. Зимой трассу, как правило, укатывает ратрак, так что бежать можно круглый год.</p>
       <div class="route">
         <div class="map">
           {route_svg}
@@ -347,7 +386,7 @@ def build_index(posts):
         <div class="item"><span class="tag must">Обязательно</span><h3>Светоотражатели</h3><p>Жилет, браслет или полосы на одежде. На старте и финише рядом дороги и машины.</p></div>
         <div class="item"><span class="tag must">Обязательно</span><h3>Заряженный телефон</h3><p>С треком маршрута и номером кого-то из группы.</p></div>
         <div class="item"><span class="tag nice">На всякий случай</span><h3>Налобный фонарь</h3><p>Трасса освещена, но фонари вдоль неё могут не работать. С налобником от 200 люмен это не проблема.</p></div>
-        <div class="item"><span class="tag nice">Желательно</span><h3>Кроссовки с протектором</h3><p>Грунт, листья, зимой снег и лёд. Трейловые подойдут лучше асфальтовых.</p></div>
+        <div class="item"><span class="tag nice">Желательно</span><h3>Кроссовки с протектором</h3><p>Грунт, листья, зимой укатанный снег. Трейловых кроссовок достаточно.</p></div>
         <div class="item"><span class="tag nice">Желательно</span><h3>Вода и слой одежды</h3><p>Час в лесу, к концу пробежки становится заметно холоднее.</p></div>
         <div class="item"><span class="tag nice">Желательно</span><h3>Трек в часах</h3><p>Загрузи GPX маршрута в часы или приложение, и разворот не пропустишь.</p></div>
       </div>
@@ -384,10 +423,10 @@ def build_index(posts):
           <div class="disclaimer" style="margin-top:28px"><p>{DISCLAIMER_SHORT}</p></div>
         </div>
         <div>
-          <details><summary>Почему «бег#заЧанку»?</summary><p>На 3,5 км мы перебегаем реку Чанку, то есть бежим за Чанку в прямом смысле. А ещё это тост, как «стопка за деда»: только вместо стопки в четверг — десятка за Чанку. Туда за Чанку, обратно за себя.</p></details>
+          <details><summary>Почему «бег#заЧанку»?</summary><p>На 3,5 км мы перебегаем реку Чанку, так что бежим за Чанку в прямом смысле. А ещё «за» — как в «ложке за маму» или «стопке за деда»: делаем что-то в честь кого-то. У нас это десятка за Чанку. Туда за Чанку, обратно за себя.</p></details>
           <details><summary>Я никогда не бегал 10 км. Мне можно?</summary><p>Если спокойно пробегаешь 5–6 км, приходи. Темп около 6:00 на км, никто не гонится. Для первого раза лучше заранее написать в канал. И сначала посоветуйся с врачом, если давно не было нагрузок.</p></details>
           <details><summary>Это соревнование? Есть протокол и время?</summary><p>Нет. Это дружеская пробежка, без судей, результатов и призов. Время каждый считает на своих часах.</p></details>
-          <details><summary>А если дождь или мороз?</summary><p>Бежим почти в любую погоду. Отменяем при грозе, тотальном ливне, сильном гололёде или морозе ниже −20 °C. Об отмене пишем в канал до 18:00, и она сразу видна на этом сайте.</p></details>
+          <details><summary>А если дождь или мороз?</summary><p>Бежим почти в любую погоду. Отменяем при грозе, тотальном ливне, сильном гололёде, морозе ниже −20 °C и после сильного снегопада, пока ратрак ещё не укатал трассу. Об отмене пишем в канал до 18:00, и она сразу видна на этом сайте.</p></details>
           <details><summary>Как добраться и где оставить машину?</summary><p>На машине — парковка у ТЦ «Июнь» (ул. Мира, 51), от неё до старта около 250 метров через два перехода со светофорами. На автобусе — до остановки «ТРЦ Июнь». Точка сбора и парковка отмечены на схеме маршрута.</p></details>
           <details><summary>Можно с собакой?</summary><p>Можно, на поводке и если собака выдерживает 10 км.</p></details>
           <details><summary>Сколько стоит?</summary><p>Нисколько. Мы ничего не продаём и не собираем деньги.</p></details>
