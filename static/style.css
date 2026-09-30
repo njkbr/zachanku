@@ -239,3 +239,12 @@ footer p{margin:0 0 10px;max-width:62ch}
 .route .meet-info{display:grid;gap:12px}
 .route .note{grid-column:1/-1;margin-top:-12px}
 @media (max-width:860px){.route{grid-template-columns:1fr}.route .meet{grid-template-columns:1fr}}
+
+/* прогноз погоды на ближайшую пробежку */
+.weather{margin-top:14px;max-width:62ch;padding:14px 16px;border-radius:12px;border:1px solid var(--moss-2);background:rgba(22,33,28,.8);display:grid;gap:6px;font-size:15px}
+.weather .w-main b{font:700 22px/1 var(--display);color:var(--pine);margin-right:6px}
+.weather .w-main span,.weather .w-row{color:var(--fog)}
+.weather .w-tips{margin:4px 0 0;padding-left:18px;color:var(--beam);font-size:14px}
+.weather .w-src{font-size:12.5px;color:var(--fog);margin-top:4px}
+.weather .w-src a{color:var(--fog)}
+.weather .w-src a:hover{color:var(--pine)}

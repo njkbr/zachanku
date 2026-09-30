@@ -39,6 +39,11 @@
     var r = nextRun(new Date()), a = readAnnounce(r);
     var box = $("next"), inEl = $("nextIn"), ann = $("announce");
     dateEl.textContent = "чт, " + r.start.getUTCDate() + " " + months[r.start.getUTCMonth()] + ", 20:00";
+    var wEl = $("weather");
+    if (wEl) {  // прогноз показываем, только если он на этот же четверг
+      var key = r.start.toISOString().slice(0, 16);
+      wEl.hidden = wEl.getAttribute("data-run") !== key;
+    }
 
     if (a && a.status === "cancel") {
       box.classList.add("cancel");
