@@ -1,3 +1,12 @@
+# Сборка сайта бег#заЧанку и выкладка на хостинг REG.RU по FTP.
+# Запускается: при каждом изменении в репозитории, каждые 30 минут (подхватить анонс из Telegram)
+# и вручную кнопкой Run workflow во вкладке Actions.
+#
+# Нужны секреты (Settings → Secrets and variables → Actions → New repository secret):
+#   FTP_SERVER    — адрес FTP-сервера из письма REG.RU / раздела «Доступы» хостинга
+#   FTP_USERNAME  — логин FTP (обычно вида u1234567)
+#   FTP_PASSWORD  — пароль FTP
+#   FTP_DIR       — папка сайта на хостинге, например www/zachanku.ru/  (со слешем в конце)
 name: site
 
 on:
@@ -8,7 +17,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: write   # чтобы сохранить свежий анонс в репозиторий
 
 concurrency:
   group: site
@@ -39,6 +48,9 @@ jobs:
             git push
           fi
 
+      - name: Забрать прогноз погоды
+        run: python scripts/fetch_weather.py
+
       - name: Собрать сайт
         run: python build.py
 
@@ -50,4 +62,5 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           server-dir: ${{ secrets.FTP_DIR }}
           local-dir: ./dist/
-          protocol: ftps
+          protocol: ftps        # если REG.RU не примет ftps, поменяйте на ftp
+          # загружаются только изменённые файлы; список хранится на хостинге в .ftp-deploy-sync-state.json
