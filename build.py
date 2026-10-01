@@ -22,6 +22,8 @@ SITE = CFG["site_url"].rstrip("/")
 MSK = dt.timezone(dt.timedelta(hours=3))
 NOW = dt.datetime.now(MSK)
 TG = f"https://t.me/{CFG['telegram_channel']}"
+EMAIL = "beg@zachanku.ru"
+COPY_YEARS = "2026" if NOW.year <= 2026 else f"2026–{NOW.year}"
 MONTHS = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа",
           "сентября", "октября", "ноября", "декабря"]
 e = html.escape
@@ -163,8 +165,13 @@ def footer(depth):
       <p>Сайт не собирает персональные данные. Здесь нет форм, регистрации, счётчиков посещений и рекламы, сайт не ставит cookies, а шрифты загружаются с этого же сайта.</p>
       <p>В вашем браузере сохраняется только отметка о том, что вы закрыли уведомление внизу экрана. Она никуда не передаётся, её можно удалить, очистив данные сайта.</p>
       <p>Ссылки на Telegram ведут на сторонний сервис со своими правилами обработки данных.</p>
+      <p>Если вы напишете нам на почту, адрес и письмо используются только для ответа и никому не передаются.</p>
       <p style="margin-top:18px"><a href="{href('blog/', depth)}">Блог</a> · <a href="{SITE}/feed.xml">RSS</a> · <a href="{TG}" target="_blank" rel="noopener">Telegram</a></p>
     </div>
+  </div>
+  <div class="wrap foot-bottom">
+    <span>© {COPY_YEARS} {wordmark()}. Тексты и изображения — с указанием ссылки на zachanku.ru.</span>
+    <span>Обратная связь: <a href="mailto:{EMAIL}">{EMAIL}</a></span>
   </div>
 </footer>
 <div class="notice" id="notice" role="region" aria-label="Уведомление о данных" hidden>
@@ -215,11 +222,13 @@ def render_weather(w, run):
     if w.get("wind") is not None:
         row.append(f"ветер {w['wind']} м/с")
     tips = "".join(f"<li>{e(t)}</li>" for t in w.get("tips", []))
+    head = f"Прогноз на четверг, {run.day} {MONTHS[run.month - 1]}, 20:00–21:00"
     return (f'<div class="weather" id="weather" data-run="{e(w["run"])}">'
+            f'<div class="w-head">{head}</div>'
             f'<div class="w-main">{main}</div>'
             + (f'<div class="w-row">{" · ".join(row)}</div>' if row else "")
             + (f'<ul class="w-tips">{tips}</ul>' if tips else "")
-            + f'<div class="w-src">Прогноз на 20:00–21:00 у точки сбора · данные '
+            + f'<div class="w-src">У точки сбора · данные '
               f'<a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a> (CC BY 4.0) · '
               f'<a href="{e(ya)}" target="_blank" rel="noopener">Подробнее на Яндекс Погоде →</a></div></div>')
 
@@ -332,8 +341,8 @@ def build_index(posts):
             <li><div class="km">0–3,0</div><div><b>Просека на север</b><span>Три километра по прямой через Мытищинский лесопарк.</span></div></li>
             <li><div class="km">3,0</div><div><b>Налево</b><span>Полкилометра на запад по лесной дороге.</span></div></li>
             <li><div class="km">3,5</div><div><b>Направо, через Чанку {mark("dark", "word", "bold", cls="leg-mark", title=False).replace('role="img" aria-label="#"', 'aria-hidden="true" focusable="false"')}</b><span>Полкилометра на север, по мосту через реку, как на нашем логотипе. После дождей здесь мокро.</span></div></li>
-            <li><div class="km">4,1</div><div><b>Налево</b><span>Последний отрезок на запад, к краю посёлка.</span></div></li>
-            <li><div class="km">≈5,0</div><div><b>Разворот</b><span>Ждём последнего и бежим обратно тем же путём.</span></div></li>
+            <li><div class="km">4,0</div><div><b>Налево</b><span>Последний отрезок на запад, к краю посёлка.</span></div></li>
+            <li><div class="km">5,0</div><div><b>Разворот</b><span>Ждём последнего и бежим обратно тем же путём.</span></div></li>
             <li><div class="km">10</div><div><b>Финиш</b><span>Там же, где старт. Около 21:00.</span></div></li>
           </ol>
           <div class="meet">
@@ -342,7 +351,7 @@ def build_index(posts):
             <div class="coords"><code id="coords">{meet['lat']:.6f}, {meet['lon']:.6f}</code><button class="btn sm ghost" id="copyCoords" type="button">Скопировать</button></div>
             <div class="links">
               <a href="{e(yandex)}" target="_blank" rel="noopener">Открыть в Яндекс Картах</a>
-              <a href="route.gpx" target="_blank" rel="noopener">Скачать трек GPX</a>
+              <span class="dl">Скачать трек: <a href="route.gpx" download="zachanku-10km.gpx">GPX</a> · <a href="route.kml" download="zachanku-10km.kml">KML</a> · <a href="route.tcx" download="zachanku-10km.tcx">TCX</a></span>
             </div>
             <div class="park">
               <span class="p-badge" aria-hidden="true">P</span>
@@ -373,7 +382,7 @@ def build_index(posts):
                 <text x="216" y="44" fill="#E6ECE4" font-family="Golos Text, sans-serif" font-size="12" font-weight="600">Старт</text>
               </svg>
           </div>
-          <p class="note">Схема построена по GPX-треку пробежки 24 сентября 2026. Точный трек ровно на 10 км скоро выложим.</p>
+          <p class="note">Схема построена по треку пробежки 1 октября 2026 года: 10 км от точки сбора и обратно. GPX подходит для большинства часов и приложений, KML — для Google Earth и Яндекс Карт, TCX — для Garmin (курс с виртуальным партнёром в темпе 6:00/км).</p>
       </div>
     </div>
   </section>
@@ -381,7 +390,7 @@ def build_index(posts):
   <section id="kit">
     <div class="wrap">
       <div class="eyebrow">Что взять</div>
-      <h2>Трасса освещена, но в 20:00 в лесу всё равно ночь</h2>
+      <h2>Трасса освещена, но в осенне-зимнее время в 20:00 в лесу всё равно ночь</h2>
       <div class="kit">
         <div class="item"><span class="tag must">Обязательно</span><h3>Светоотражатели</h3><p>Жилет, браслет или полосы на одежде. На старте и финише рядом дороги и машины.</p></div>
         <div class="item"><span class="tag must">Обязательно</span><h3>Заряженный телефон</h3><p>С треком маршрута и номером кого-то из группы.</p></div>
@@ -448,7 +457,7 @@ def build_index(posts):
     </div>
   </section>
 </main>"""
-    title = f"{CFG['name']} — бесплатная вечерняя пробежка 10 км в Мытищах по четвергам"
+    title = f"{CFG['name']} — вечерние пробежки 10 км в Мытищах"
     return page(title, CFG["description"], "", 0, body, jsonld=[website, event], bare=ARTIFACT)
 
 
