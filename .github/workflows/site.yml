@@ -64,3 +64,19 @@ jobs:
           local-dir: ./dist/
           protocol: ftps        # если REG.RU не примет ftps, поменяйте на ftp
           # загружаются только изменённые файлы; список хранится на хостинге в .ftp-deploy-sync-state.json
+
+      - name: Опубликовать новые статьи в Telegram
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        run: python scripts/post_telegram.py
+
+      - name: Запомнить опубликованные статьи
+        run: |
+          if [ -f data/posted.json ] && { ! git ls-files --error-unmatch data/posted.json >/dev/null 2>&1 || ! git diff --quiet data/posted.json; }; then
+            git config user.name "site-bot"
+            git config user.email "site-bot@users.noreply.github.com"
+            git add data/posted.json
+            git commit -m "Статьи опубликованы в Telegram"
+            git pull --rebase
+            git push
+          fi
