@@ -66,7 +66,15 @@ def href(path, depth):
 
 
 def asset(name, depth):
-    return "../" * depth + name
+    """Путь к файлу из static/. К CSS и JS добавляется ?v=<хеш содержимого>,
+    чтобы после обновления браузеры посетителей не показывали старую версию из кеша."""
+    url = "../" * depth + name
+    if name.endswith((".css", ".js")):
+        import hashlib
+        src = ROOT / "static" / name
+        if src.exists():
+            url += "?v=" + hashlib.md5(src.read_bytes()).hexdigest()[:8]
+    return url
 
 
 # ---------- посты ----------
