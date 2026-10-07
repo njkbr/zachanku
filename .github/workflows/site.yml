@@ -27,9 +27,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
           cache: pip
@@ -54,7 +54,21 @@ jobs:
       - name: Собрать сайт
         run: python build.py
 
+      # Выкладываем, только если сайт действительно изменился: так к FTP REG.RU
+      # подключаемся несколько раз в день, а не 48. Отпечаток сборки лежит на сайте в build-hash.txt.
+      - name: Проверить, изменился ли сайт
+        id: check
+        run: |
+          HASH=$(cd dist && find . -type f ! -name build-hash.txt | sort | xargs sha256sum | sha256sum | cut -c1-16)
+          echo "$HASH" > dist/build-hash.txt
+          LIVE=$(curl -fsS --max-time 20 "https://zachanku.ru/build-hash.txt" 2>/dev/null || echo "нет")
+          echo "сборка: $HASH, на сайте: $LIVE"
+          if [ "$HASH" = "$LIVE" ]; then echo "changed=false" >> "$GITHUB_OUTPUT"; else echo "changed=true" >> "$GITHUB_OUTPUT"; fi
+
       - name: Выложить на REG.RU по FTP
+        id: ftp1
+        if: steps.check.outputs.changed == 'true'
+        continue-on-error: true
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
@@ -62,8 +76,26 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           server-dir: ${{ secrets.FTP_DIR }}
           local-dir: ./dist/
-          protocol: ftps        # если REG.RU не примет ftps, поменяйте на ftp
+          protocol: ftps
+          timeout: 120000
           # загружаются только изменённые файлы; список хранится на хостинге в .ftp-deploy-sync-state.json
+
+      # Если REG.RU оборвал соединение (ECONNRESET), ждём минуту и пробуем ещё раз.
+      - name: Подождать перед повтором
+        if: steps.ftp1.outcome == 'failure'
+        run: sleep 60
+
+      - name: Выложить на REG.RU по FTP (повтор)
+        if: steps.ftp1.outcome == 'failure'
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: ${{ secrets.FTP_DIR }}
+          local-dir: ./dist/
+          protocol: ftps
+          timeout: 120000
 
       - name: Опубликовать новые статьи в Telegram
         env:
