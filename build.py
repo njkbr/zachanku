@@ -3,7 +3,7 @@
 
   python build.py              — боевая сборка (черновики draft: true не попадают на сайт)
   python build.py --drafts     — вместе с черновиками, для проверки
-  python build.py --artifact   — превью для Claude (dist-artifact/, с черновиками и примером анонса)
+  python build.py --artifact   — превью в dist-artifact/: с черновиками и примером анонса
 
 Зависимости: pip install markdown beautifulsoup4 pillow
 """
