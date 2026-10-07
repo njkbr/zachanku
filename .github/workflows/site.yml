@@ -1,12 +1,9 @@
-# Сборка сайта бег#заЧанку и выкладка на хостинг REG.RU по FTP.
+# Сборка сайта бег#заЧанку. Готовый сайт кладётся в ветку site, хостинг REG.RU забирает его сам (CRON).
 # Запускается: при каждом изменении в репозитории, каждые 30 минут (подхватить анонс из Telegram)
 # и вручную кнопкой Run workflow во вкладке Actions.
 #
 # Нужны секреты (Settings → Secrets and variables → Actions → New repository secret):
-#   FTP_SERVER    — адрес FTP-сервера из письма REG.RU / раздела «Доступы» хостинга
-#   FTP_USERNAME  — логин FTP (обычно вида u1234567)
-#   FTP_PASSWORD  — пароль FTP
-#   FTP_DIR       — папка сайта на хостинге, например www/zachanku.ru/  (со слешем в конце)
+#   TELEGRAM_BOT_TOKEN — токен бота для публикации статей в канал
 name: site
 
 on:
@@ -54,48 +51,32 @@ jobs:
       - name: Собрать сайт
         run: python build.py
 
-      # Выкладываем, только если сайт действительно изменился: так к FTP REG.RU
-      # подключаемся несколько раз в день, а не 48. Отпечаток сборки лежит на сайте в build-hash.txt.
-      - name: Проверить, изменился ли сайт
-        id: check
+      # Выкладка без FTP: с 06.10.2026 REG.RU закрыл FTP/SFTP для зарубежных адресов (защита от DDoS),
+      # а PHP на тарифе запрещён. Поэтому готовый сайт кладётся в ветку «site» этого репозитория,
+      # а хостинг каждые 5 минут сам забирает её скриптом hosting/zachanku-pull.sh (Планировщик CRON).
+      # Ветка обновляется, только если сборка изменилась (сравниваем отпечаток build-hash.txt).
+      - name: Положить сайт в ветку site
         run: |
           HASH=$(cd dist && find . -type f ! -name build-hash.txt | sort | xargs sha256sum | sha256sum | cut -c1-16)
           echo "$HASH" > dist/build-hash.txt
-          LIVE=$(curl -fsS --max-time 20 "https://zachanku.ru/build-hash.txt" 2>/dev/null || echo "нет")
-          echo "сборка: $HASH, на сайте: $LIVE"
-          if [ "$HASH" = "$LIVE" ]; then echo "changed=false" >> "$GITHUB_OUTPUT"; else echo "changed=true" >> "$GITHUB_OUTPUT"; fi
-
-      - name: Выложить на REG.RU по FTP
-        id: ftp1
-        if: steps.check.outputs.changed == 'true'
-        continue-on-error: true
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: ${{ secrets.FTP_DIR }}
-          local-dir: ./dist/
-          protocol: ftps
-          timeout: 120000
-          # загружаются только изменённые файлы; список хранится на хостинге в .ftp-deploy-sync-state.json
-
-      # Если REG.RU оборвал соединение (ECONNRESET), ждём минуту и пробуем ещё раз.
-      - name: Подождать перед повтором
-        if: steps.ftp1.outcome == 'failure'
-        run: sleep 60
-
-      - name: Выложить на REG.RU по FTP (повтор)
-        if: steps.ftp1.outcome == 'failure'
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: ${{ secrets.FTP_DIR }}
-          local-dir: ./dist/
-          protocol: ftps
-          timeout: 120000
+          OLD=""
+          if git fetch -q --depth=1 origin site 2>/dev/null; then
+            OLD=$(git show FETCH_HEAD:build-hash.txt 2>/dev/null | tr -d ' \r\n' || true)
+          fi
+          echo "сборка: $HASH, в ветке site: ${OLD:-нет}"
+          if [ "$HASH" = "$OLD" ]; then
+            echo "сайт не изменился, выкладывать нечего"
+            exit 0
+          fi
+          cd dist
+          git init -q
+          git checkout -q -b site
+          git config user.name "site-bot"
+          git config user.email "site-bot@users.noreply.github.com"
+          git add -A
+          git commit -qm "Сборка $HASH"
+          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" site
+          echo "ветка site обновлена, хостинг заберёт её в течение 5 минут"
 
       - name: Опубликовать новые статьи в Telegram
         env:
