@@ -1,0 +1,77 @@
+#!/bin/bash
+# Забирает свежую сборку сайта zachanku.ru с GitHub и раскладывает её в папку сайта.
+#
+# Зачем: с 06.10.2026 REG.RU закрыл FTP/SFTP для зарубежных адресов, и GitHub не может
+# выложить сайт сам. Поэтому GitHub складывает готовый сайт в ветку «site» репозитория,
+# а хостинг раз в 5 минут запускает этот скрипт из Планировщика CRON и забирает обновление.
+#
+# Лежит на хостинге в корне: /zachanku-pull.sh
+# Задание CRON (каждые 5 минут):
+#   bash $HOME/zachanku-pull.sh >> $HOME/.zachanku-pull/cron.log 2>&1
+#
+# Если репозиторий приватный, положите токен GitHub (только чтение) в файл $HOME/.zachanku-github-token.
+
+set -eu
+export LC_ALL=C
+
+REPO="njkbr/zachanku"
+BRANCH="site"
+SITE="$HOME/www/zachanku.ru"
+WORK="$HOME/.zachanku-pull"
+TOKEN_FILE="$HOME/.zachanku-github-token"
+
+mkdir -p "$WORK"
+cd "$WORK"
+
+# Не запускаемся дважды одновременно
+exec 9>"$WORK/lock"
+flock -n 9 || exit 0
+
+if [ -s "$TOKEN_FILE" ]; then
+    # Приватный репозиторий: через API с токеном
+    AUTH="Authorization: Bearer $(tr -d ' \r\n' < "$TOKEN_FILE")"
+    HASH_URL="https://api.github.com/repos/$REPO/contents/build-hash.txt?ref=$BRANCH"
+    ARCHIVE_URL="https://api.github.com/repos/$REPO/tarball/$BRANCH"
+    ACCEPT="Accept: application/vnd.github.raw"
+else
+    # Публичный репозиторий: без токена
+    AUTH="X-No-Auth: 1"
+    HASH_URL="${HASH_URL:-https://raw.githubusercontent.com/$REPO/$BRANCH/build-hash.txt}"
+    ARCHIVE_URL="${ARCHIVE_URL:-https://codeload.github.com/$REPO/tar.gz/refs/heads/$BRANCH}"
+    ACCEPT="Accept: */*"
+fi
+
+# 1. Есть ли новая сборка? Сравниваем отпечаток на GitHub и на сайте.
+REMOTE=$(curl -fsSL --max-time 30 -H "$AUTH" -H "$ACCEPT" "$HASH_URL" | tr -d ' \r\n') || exit 0
+LOCAL=$( { tr -d ' \r\n' < "$SITE/build-hash.txt"; } 2>/dev/null || true)
+[ -n "$REMOTE" ] || exit 0
+[ "$REMOTE" = "$LOCAL" ] && exit 0
+
+# 2. Скачиваем и распаковываем во временную папку
+rm -rf new site.tar.gz
+mkdir new
+curl -fsSL --max-time 120 -H "$AUTH" -o site.tar.gz "$ARCHIVE_URL"
+tar -xzf site.tar.gz -C new --strip-components=1
+if [ ! -f new/index.html ]; then
+    echo "$(date '+%F %T') в архиве нет index.html, пропускаю"
+    exit 1
+fi
+
+# 3. Копируем в папку сайта (build-hash.txt последним — он отмечает, что выкладка завершена)
+mkdir -p "$SITE"
+(cd new && find . -type f ! -name build-hash.txt | sort) > manifest.new
+(cd new && tar -cf - --exclude=./build-hash.txt .) | (cd "$SITE" && tar -xf -)
+
+# 4. Удаляем файлы, которые были в прошлой сборке, а в этой исчезли
+if [ -f manifest ]; then
+    comm -23 manifest manifest.new | while IFS= read -r f; do
+        case "$f" in
+            ./*) rm -f -- "$SITE/${f#./}" ;;
+        esac
+    done
+fi
+mv manifest.new manifest
+cp new/build-hash.txt "$SITE/build-hash.txt"
+
+rm -rf new site.tar.gz
+echo "$(date '+%F %T') сайт обновлён: $LOCAL -> $REMOTE"
