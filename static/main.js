@@ -34,6 +34,21 @@
     } catch (e) { return null; }
   }
 
+  // Эмодзи, которых нет в старых системах (например, 🫡 в Windows 10), показываем картинкой Noto Emoji
+  var EMOJI_IMG = { "\uD83E\uDEE1": "/img/emoji-salute.svg" };
+  function setText(el, text) {
+    el.textContent = "";
+    var re = new RegExp(Object.keys(EMOJI_IMG).join("|"), "g"), last = 0, m;
+    while ((m = re.exec(text))) {
+      el.appendChild(document.createTextNode(text.slice(last, m.index)));
+      var img = document.createElement("img");
+      img.src = EMOJI_IMG[m[0]]; img.alt = m[0]; img.className = "emoji";
+      el.appendChild(img);
+      last = m.index + m[0].length;
+    }
+    el.appendChild(document.createTextNode(text.slice(last)));
+  }
+
   function tick() {
     var dateEl = $("nextDate"); if (!dateEl) return;
     var r = nextRun(new Date()), a = readAnnounce(r);
@@ -59,7 +74,7 @@
         ann.hidden = false;
         ann.className = "announce" + (a.status === "cancel" ? " cancel" : "");
         ann.querySelector("b").textContent = a.status === "cancel" ? "Отмена" : "Анонс из канала";
-        ann.querySelector("p").textContent = a.text;
+        setText(ann.querySelector("p"), a.text);
         var link = ann.querySelector("a");
         if (a.url) { link.href = a.url; link.hidden = false; } else link.hidden = true;
       } else ann.hidden = true;

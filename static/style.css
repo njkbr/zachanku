@@ -262,3 +262,5 @@ footer p{margin:0 0 10px;max-width:62ch}
 .foot-bottom .wm{font-size:13px}
 .weather .w-head{font:600 12px/1.2 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--beam);margin-bottom:2px}
 .links .dl{color:var(--fog)}
+
+img.emoji{display:inline-block;width:1.15em;height:1.15em;vertical-align:-.2em;margin:0 .05em}
