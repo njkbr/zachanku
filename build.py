@@ -231,11 +231,18 @@ def render_weather(w, run):
         row.append(f"ветер {w['wind']} м/с")
     tips = "".join(f"<li>{e(t)}</li>" for t in w.get("tips", []))
     head = f"Прогноз на четверг, {run.day} {MONTHS[run.month - 1]}, 20:00–21:00"
+    upd = ""
+    try:  # когда прогноз был получен (время МСК), чтобы было видно, что он свежий
+        u = dt.datetime.strptime(w.get("updated", ""), "%Y-%m-%dT%H:%M")
+        upd = f"{u.day} {MONTHS[u.month - 1]} в {u:%H:%M}"
+    except ValueError:
+        pass
     return (f'<div class="weather" id="weather" data-run="{e(w["run"])}">'
             f'<div class="w-head">{head}</div>'
             f'<div class="w-main">{main}</div>'
             + (f'<div class="w-row">{" · ".join(row)}</div>' if row else "")
             + (f'<ul class="w-tips">{tips}</ul>' if tips else "")
+            + (f'<div class="w-upd">Обновлено {upd}</div>' if upd else "")
             + f'<div class="w-src">У точки сбора · данные '
               f'<a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a> (CC BY 4.0) · '
               f'<a href="{e(ya)}" target="_blank" rel="noopener">Подробнее на Яндекс Погоде →</a></div></div>')

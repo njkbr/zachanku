@@ -253,7 +253,8 @@ footer p{margin:0 0 10px;max-width:62ch}
 .weather .w-main b{font:700 22px/1 var(--display);color:var(--pine);margin-right:6px}
 .weather .w-main span,.weather .w-row{color:var(--fog)}
 .weather .w-tips{margin:4px 0 0;padding-left:18px;color:var(--beam);font-size:14px}
-.weather .w-src{font-size:12.5px;color:var(--fog);margin-top:4px}
+.weather .w-upd{font-size:12.5px;color:var(--fog);margin-top:6px}
+.weather .w-src{font-size:12.5px;color:var(--fog);margin-top:2px}
 .weather .w-src a{color:var(--fog)}
 .weather .w-src a:hover{color:var(--pine)}
 
