@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 """Публикует в Telegram-канал новые статьи блога: картинка-превью, заголовок, описание, ссылка, #блог.
 
-Работает после выкладки сайта. Какие статьи уже опубликованы, хранится в data/posted.json,
+Работает после сборки сайта. Статья публикуется в канал, только когда она уже открывается на сайте:
+хостинг забирает сборку с задержкой до 5 минут, поэтому без проверки в канал попадала бы ссылка на 404.
+Если статьи на сайте ещё нет, она будет опубликована при следующей сборке (раз в 15 минут).
+
+Какие статьи уже опубликованы, хранится в data/posted.json,
 поэтому каждая статья уходит в канал один раз. Черновики (draft: true) не публикуются.
 Токен бота берётся из секрета GitHub TELEGRAM_BOT_TOKEN; без токена скрипт ничего не делает.
 Бот должен быть администратором канала с правом «Публикация сообщений».
@@ -36,6 +40,16 @@ def posts():
     return sorted(out, key=lambda p: p["date"])
 
 
+def is_live(url):
+    """Открывается ли страница на сайте (код 200)."""
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "zachanku.ru post check"})
+        with urllib.request.urlopen(req, timeout=20) as r:
+            return r.status == 200
+    except Exception:
+        return False
+
+
 def send_photo(token, chat, caption):
     boundary = uuid.uuid4().hex
     parts = []
@@ -67,6 +81,9 @@ def main():
                    f"Читать: {url}\n\n#блог")[:1024]
         if DRY:
             print(f"[telegram] опубликую: {p['slug']}\n{caption}\n")
+            continue
+        if not is_live(url):
+            print(f"[telegram] {p['slug']}: на сайте ещё нет ({url}), опубликую при следующей сборке")
             continue
         try:
             res = send_photo(token, chat, caption)
