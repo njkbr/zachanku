@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 380" role="img" aria-label="Отклонение пульса по участкам маршрута: на подъёмах после 3,5 и 6,5 км пульс на 1–2 удара выше обычного" font-family="Golos Text, system-ui, sans-serif">
+<rect width="720" height="380" rx="14" fill="#16211C"/>
+<line x1="64" x2="696" y1="320.0" y2="320.0" stroke="#8EA197" stroke-opacity="0.18"/>
+<text x="54" y="324.0" text-anchor="end" font-size="12" fill="#8EA197">-2</text>
+<line x1="64" x2="696" y1="250.0" y2="250.0" stroke="#8EA197" stroke-opacity="0.18"/>
+<text x="54" y="254.0" text-anchor="end" font-size="12" fill="#8EA197">-1</text>
+<line x1="64" x2="696" y1="180.0" y2="180.0" stroke="#8EA197" stroke-opacity="0.45"/>
+<text x="54" y="184.0" text-anchor="end" font-size="12" fill="#8EA197">0</text>
+<line x1="64" x2="696" y1="110.0" y2="110.0" stroke="#8EA197" stroke-opacity="0.18"/>
+<text x="54" y="114.0" text-anchor="end" font-size="12" fill="#8EA197">+1</text>
+<line x1="64" x2="696" y1="40.0" y2="40.0" stroke="#8EA197" stroke-opacity="0.18"/>
+<text x="54" y="44.0" text-anchor="end" font-size="12" fill="#8EA197">+2</text>
+<rect x="65.5" y="180.0" width="15.6" height="73.5" rx="2" fill="#7FC8FF" fill-opacity=".9"/>
+<rect x="84.1" y="179.4" width="15.6" height="1.0" rx="2" fill="#FFC247" fill-opacity=".9"/>
+<rect x="102.7" y="162.5" width="15.6" height="17.5" rx="2" fill="#FFC247" fill-opacity=".9"/>
+<rect x="121.3" y="180.0" width="15.6" height="11.5" rx="2" fill="#7FC8FF" fill-opacity=".9"/>
+<rect x="139.9" y="180.0" width="15.6" height="4.2" rx="2" fill="#7FC8FF" fill-opacity=".9"/>
+<rect x="158.4" y="180.0" width="15.6" height="19.5" rx="2" fill="#7FC8FF" fill-opacity=".9"/>
+<rect x="177.0" y="180.0" width="15.6" height="16.1" rx="2" fill="#7FC8FF" fill-opacity=".9"/>
+<rect x="195.6" y="180.0" width="15.6" height="23.2" rx="2" fill="#7FC8FF" fill-opacity=".9"/>
+<rect x="214.2" y="180.0" width="15.6" height="79.8" rx="2" fill="#7FC8FF" fill-opacity=".9"/>
+<rect x="232.8" y="180.0" width="15.6" height="49.1" rx="2" fill="#7FC8FF" fill-opacity=".9"/>
+<rect x="251.4" y="180.0" width="15.6" height="38.7" rx="2" fill="#7FC8FF" fill-opacity=".9"/>
+<rect x="270.0" y="87.9" width="15.6" height="92.1" rx="2" fill="#FF7A59" fill-opacity=".9"/>
+<rect x="288.6" y="82.9" width="15.6" height="97.1" rx="2" fill="#FF7A59" fill-opacity=".9"/>
+<rect x="307.1" y="175.0" width="15.6" height="5.0" rx="2" fill="#FFC247" fill-opacity=".9"/>
+<rect x="325.7" y="180.0" width="15.6" height="2.7" rx="2" fill="#7FC8FF" fill-opacity=".9"/>
+<rect x="344.3" y="161.3" width="15.6" height="18.7" rx="2" fill="#FFC247" fill-opacity=".9"/>
+<rect x="362.9" y="129.4" width="15.6" height="50.6" rx="2" fill="#FFC247" fill-opacity=".9"/>
+<rect x="381.5" y="180.0" width="15.6" height="7.8" rx="2" fill="#7FC8FF" fill-opacity=".9"/>
+<rect x="400.1" y="167.6" width="15.6" height="12.4" rx="2" fill="#FFC247" fill-opacity=".9"/>
+<rect x="418.7" y="180.0" width="15.6" height="35.4" rx="2" fill="#7FC8FF" fill-opacity=".9"/>
+<rect x="437.3" y="104.4" width="15.6" height="75.6" rx="2" fill="#FF7A59" fill-opacity=".9"/>
+<rect x="455.9" y="159.1" width="15.6" height="20.9" rx="2" fill="#FFC247" fill-opacity=".9"/>
+<rect x="474.4" y="136.9" width="15.6" height="43.1" rx="2" fill="#FFC247" fill-opacity=".9"/>
+<rect x="493.0" y="134.4" width="15.6" height="45.6" rx="2" fill="#FFC247" fill-opacity=".9"/>
+<rect x="511.6" y="79.5" width="15.6" height="100.5" rx="2" fill="#FF7A59" fill-opacity=".9"/>
+<rect x="530.2" y="164.6" width="15.6" height="15.4" rx="2" fill="#FFC247" fill-opacity=".9"/>
+<rect x="548.8" y="180.0" width="15.6" height="23.3" rx="2" fill="#7FC8FF" fill-opacity=".9"/>
+<rect x="567.4" y="180.0" width="15.6" height="1.8" rx="2" fill="#7FC8FF" fill-opacity=".9"/>
+<rect x="586.0" y="180.0" width="15.6" height="12.1" rx="2" fill="#7FC8FF" fill-opacity=".9"/>
+<rect x="604.6" y="180.0" width="15.6" height="2.8" rx="2" fill="#7FC8FF" fill-opacity=".9"/>
+<rect x="623.1" y="180.0" width="15.6" height="17.7" rx="2" fill="#7FC8FF" fill-opacity=".9"/>
+<rect x="641.7" y="180.0" width="15.6" height="76.4" rx="2" fill="#7FC8FF" fill-opacity=".9"/>
+<rect x="660.3" y="180.0" width="15.6" height="8.0" rx="2" fill="#7FC8FF" fill-opacity=".9"/>
+<rect x="678.9" y="180.0" width="15.6" height="33.4" rx="2" fill="#7FC8FF" fill-opacity=".9"/>
+<text x="64.0" y="342" text-anchor="middle" font-size="12" fill="#8EA197">1 км</text>
+<text x="138.4" y="342" text-anchor="middle" font-size="12" fill="#8EA197">2 км</text>
+<text x="212.7" y="342" text-anchor="middle" font-size="12" fill="#8EA197">3 км</text>
+<text x="287.1" y="342" text-anchor="middle" font-size="12" fill="#8EA197">4 км</text>
+<text x="361.4" y="342" text-anchor="middle" font-size="12" fill="#8EA197">5 км</text>
+<text x="435.8" y="342" text-anchor="middle" font-size="12" fill="#8EA197">6 км</text>
+<text x="510.1" y="342" text-anchor="middle" font-size="12" fill="#8EA197">7 км</text>
+<text x="584.5" y="342" text-anchor="middle" font-size="12" fill="#8EA197">8 км</text>
+<text x="658.8" y="342" text-anchor="middle" font-size="12" fill="#8EA197">9 км</text>
+<text x="64" y="26" font-size="12" fill="#8EA197">ударов в минуту выше или ниже обычного для этой минуты пробежки</text>
+</svg>
