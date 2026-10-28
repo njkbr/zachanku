@@ -3,7 +3,7 @@
 # раз в час по расписанию (запасной вариант, GitHub может опаздывать) и вручную кнопкой Run workflow.
 #
 # Нужны секреты (Settings → Secrets and variables → Actions → New repository secret):
-#   TELEGRAM_BOT_TOKEN — токен бота для публикации статей в канал
+#   TELEGRAM_BOT_TOKEN — токен бота: статьи, автопосты в среду и четверг, команды в личке бота
 name: site
 
 on:
@@ -33,20 +33,30 @@ jobs:
 
       - run: pip install -r requirements.txt
 
+      - name: Забрать прогноз погоды
+        run: python scripts/fetch_weather.py
+
+      # Анонс в среду 12:00, «всё в силе» в четверг 15:00, команды владельца в личке бота.
+      # Подробности — в начале scripts/autopost.py.
+      - name: Автопосты и команды бота
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        run: python scripts/autopost.py
+
       - name: Забрать анонс из Telegram
         run: python scripts/fetch_announce.py
 
-      - name: Сохранить анонс, если он изменился
+      - name: Сохранить анонс и состояние автопостов, если они изменились
         run: |
-          if ! git diff --quiet data/announce.json; then
+          git add data/announce.json
+          if [ -f data/autopost.json ]; then git add data/autopost.json; fi
+          if ! git diff --cached --quiet; then
             git config user.name "site-bot"
             git config user.email "site-bot@users.noreply.github.com"
-            git commit -am "Анонс из Telegram"
+            git commit -m "Анонс из Telegram"
+            git pull --rebase --autostash
             git push
           fi
-
-      - name: Забрать прогноз погоды
-        run: python scripts/fetch_weather.py
 
       - name: Собрать сайт
         run: python build.py
