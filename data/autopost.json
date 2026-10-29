@@ -1,13 +1,10 @@
 {
-  "week": "2026-10-29",
-  "announce_id": 24,
-  "thursday_id": 25,
+  "week": "2026-11-05",
+  "announce_id": null,
+  "thursday_id": null,
   "cancel_id": null,
   "skip_announce": false,
-  "reminded": [
-    "wed",
-    "thu"
-  ],
+  "reminded": [],
   "asked_danger": false,
   "offset": 130873883
 }
