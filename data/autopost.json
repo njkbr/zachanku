@@ -4,7 +4,9 @@
   "thursday_id": null,
   "cancel_id": null,
   "skip_announce": false,
-  "reminded": [],
+  "reminded": [
+    "wed"
+  ],
   "asked_danger": false,
   "offset": 130873883
 }
