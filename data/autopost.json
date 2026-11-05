@@ -5,7 +5,8 @@
   "cancel_id": null,
   "skip_announce": false,
   "reminded": [
-    "wed"
+    "wed",
+    "thu"
   ],
   "asked_danger": false,
   "offset": 130873883
