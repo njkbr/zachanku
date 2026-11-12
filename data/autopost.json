@@ -1,7 +1,7 @@
 {
   "week": "2026-11-12",
   "announce_id": 31,
-  "thursday_id": null,
+  "thursday_id": 32,
   "cancel_id": null,
   "skip_announce": false,
   "reminded": [
