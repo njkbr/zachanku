@@ -39,6 +39,8 @@ MSK = dt.timezone(dt.timedelta(hours=3))
 CHANNEL = CFG["telegram_channel"]
 DRY = "--dry-run" in sys.argv
 
+SITE_LINE = CFG["site_url"].replace("https://", "").rstrip("/")  # ссылка на главную в конце автопостов
+
 MONTHS = ["января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа",
           "сентября", "октября", "ноября", "декабря"]
 
@@ -218,7 +220,7 @@ def text_announce(thu, w):
             f"Сбор в {CFG['run']['gather']} у входа в лесопарк со стороны Волковского шоссе, старт в {CFG['run']['time']}. "
             f"{CFG['run']['distance_km']} км, темп около {CFG['run']['pace']}/км.\n"
             + (f"Прогноз: {f}.\n" if f else "")
-            + "Отметься реакцией: 🫡 — бегу, 🤔 — возможно, 😴 — пропускаю.\n\n#анонс")
+            + "Отметься реакцией: 🫡 — бегу, 🤔 — возможно, 😴 — пропускаю.\n\n" + SITE_LINE + "\n#анонс")
 
 
 def text_thursday(thu, w, own_announce=False):
@@ -231,7 +233,7 @@ def text_thursday(thu, w, own_announce=False):
         line += f" {tr}"
     line = line.strip()
     return ("Сегодня бежим, всё в силе ✅\n" + (line + "\n" if line else "") +
-            "Не забудь светоотражатели. Кто ещё не отметился — 🫡.\n\n#анонс")
+            "Не забудь светоотражатели. Кто ещё не отметился — 🫡.\n\n" + SITE_LINE + "\n#анонс")
 
 
 def text_cancel(thu, now, reason):
@@ -358,6 +360,10 @@ def main():
     except Exception as e:
         print(f"[autopost] не удалось получить сообщения боту: {e}")
         upd = {"ok": False}
+    if upd.get("ok"):
+        print(f"[autopost] сообщений боту: {len(upd.get('result', []))}, администраторов канала: {len(adm)}")
+    elif upd.get("description"):
+        print(f"[autopost] getUpdates: {upd}")
     for u in upd.get("result", []) if upd.get("ok") else []:
         st["offset"] = u["update_id"] + 1
         m = u.get("message") or {}
@@ -365,10 +371,12 @@ def main():
         if chat.get("type") != "private" or not text:
             continue
         if uid not in adm:
+            print("[autopost] сообщение не от администратора канала, отвечаю справкой")
             send(chat["id"], "Этот бот публикует посты канала t.me/" + CHANNEL + ". Анонсы — в канале.")
             continue
         cmd, _, rest = text.lstrip("/").partition(" ")
         cmd = cmd.split("@")[0].lower()
+        print(f"[autopost] команда от владельца: {cmd}")
         if cmd in ("start", "help", "помощь"):
             send(uid, "Привет! Буду предупреждать в среду в 10:00 и в четверг в 13:00 перед автопостами.\n\n" + HELP)
         elif cmd in ("отмена", "cancel"):

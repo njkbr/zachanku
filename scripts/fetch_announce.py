@@ -3,8 +3,9 @@
 и сохраняет его в data/announce.json. Сборка сайта кладёт этот файл в главную.
 
 Источник — публичная веб-версия канала https://t.me/s/<канал>, без бота и токенов.
-Если канал недоступен, файл не трогаем: на сайте останется прошлый анонс
-(а устаревший анонс скрипт на странице сам перестанет показывать через 6 дней).
+Если пост с меткой удалили, а других постов с метками нет, анонс с сайта убирается.
+Если канал недоступен (сбой сети), файл не трогаем: на сайте останется прошлый анонс.
+Устаревший анонс страница сама перестаёт показывать после окончания пробежки в четверг (21:00).
 
 Запуск:  python scripts/fetch_announce.py            — канал из config.json
          python scripts/fetch_announce.py --html f   — разобрать сохранённую страницу (для проверки)
@@ -47,6 +48,9 @@ def parse(html):
         if not status:
             continue
         text = re.sub(r"#(анонс|отмена)\b", "", raw, flags=re.I)
+        # строка со ссылкой на сам сайт (её добавляют автопосты) на сайте не нужна
+        site = CFG["site_url"].replace("https://", "").rstrip("/")
+        text = "\n".join(l for l in text.split("\n") if l.strip().lower() not in (site, "https://" + site, "https://" + site + "/"))
         text = re.sub(r"[ \t]+\n", "\n", text)
         text = re.sub(r"\n{3,}", "\n\n", text).strip()
         post = msg["data-post"]  # вида "zachanku/123"
@@ -67,7 +71,12 @@ def main():
         return 0
     a = parse(html)
     if not a:
-        print("[announce] постов с #анонс или #отмена не найдено, оставляю прежний анонс")
+        # в канале нет постов с метками (например, анонс удалили) — убираем анонс с сайта
+        if OUT.exists() and OUT.read_text(encoding="utf-8").strip() not in ("", "{}"):
+            OUT.write_text("{}\n", encoding="utf-8")
+            print("[announce] постов с #анонс или #отмена нет, анонс на сайте убран")
+        else:
+            print("[announce] постов с #анонс или #отмена нет")
         return 0
     OUT.parent.mkdir(exist_ok=True)
     OUT.write_text(json.dumps(a, ensure_ascii=False, indent=2), encoding="utf-8")
