@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 380" role="img" aria-label="Темп на десятке с августа 2024 по сентябрь 2026: от 8:55 до 5:19 на километр, затем ровно 5:30–6:30" font-family="Golos Text, system-ui, sans-serif">
+<rect width="720" height="380" rx="14" fill="#16211C"/>
+<line x1="64" x2="696" y1="40.0" y2="40.0" stroke="#8EA197" stroke-opacity=".18"/>
+<text x="54" y="44.0" text-anchor="end" font-size="12" fill="#8EA197">5:00</text>
+<line x1="64" x2="696" y1="112.0" y2="112.0" stroke="#8EA197" stroke-opacity=".18"/>
+<text x="54" y="116.0" text-anchor="end" font-size="12" fill="#8EA197">6:00</text>
+<line x1="64" x2="696" y1="184.0" y2="184.0" stroke="#8EA197" stroke-opacity=".18"/>
+<text x="54" y="188.0" text-anchor="end" font-size="12" fill="#8EA197">7:00</text>
+<line x1="64" x2="696" y1="256.0" y2="256.0" stroke="#8EA197" stroke-opacity=".18"/>
+<text x="54" y="260.0" text-anchor="end" font-size="12" fill="#8EA197">8:00</text>
+<line x1="64" x2="696" y1="328.0" y2="328.0" stroke="#8EA197" stroke-opacity=".18"/>
+<text x="54" y="332.0" text-anchor="end" font-size="12" fill="#8EA197">9:00</text>
+<text x="88.8" y="350" text-anchor="middle" font-size="12" fill="#8EA197">сен 2024</text>
+<line x1="88.8" x2="88.8" y1="328" y2="333" stroke="#8EA197" stroke-opacity=".5"/>
+<text x="186.2" y="350" text-anchor="middle" font-size="12" fill="#8EA197">янв 2025</text>
+<line x1="186.2" x2="186.2" y1="328" y2="333" stroke="#8EA197" stroke-opacity=".5"/>
+<text x="282.1" y="350" text-anchor="middle" font-size="12" fill="#8EA197">май 2025</text>
+<line x1="282.1" x2="282.1" y1="328" y2="333" stroke="#8EA197" stroke-opacity=".5"/>
+<text x="380.4" y="350" text-anchor="middle" font-size="12" fill="#8EA197">сен 2025</text>
+<line x1="380.4" x2="380.4" y1="328" y2="333" stroke="#8EA197" stroke-opacity=".5"/>
+<text x="477.9" y="350" text-anchor="middle" font-size="12" fill="#8EA197">янв 2026</text>
+<line x1="477.9" x2="477.9" y1="328" y2="333" stroke="#8EA197" stroke-opacity=".5"/>
+<text x="573.8" y="350" text-anchor="middle" font-size="12" fill="#8EA197">май 2026</text>
+<line x1="573.8" x2="573.8" y1="328" y2="333" stroke="#8EA197" stroke-opacity=".5"/>
+<text x="672.0" y="350" text-anchor="middle" font-size="12" fill="#8EA197">сен 2026</text>
+<line x1="672.0" x2="672.0" y1="328" y2="333" stroke="#8EA197" stroke-opacity=".5"/>
+<line x1="64" x2="696" y1="112.0" y2="112.0" stroke="#FFC247" stroke-opacity=".55" stroke-dasharray="4 5"/>
+<text x="385" y="131.0" text-anchor="middle" font-size="12" fill="#E6ECE4">темп бег#заЧанку, 6:00/км</text>
+<path d="M72.0,323.1 L77.6,170.4 L82.4,178.6 L105.5,141.9 L127.9,109.2 L139.9,98.1 L161.5,107.1 L186.2,124.5 L221.4,91.6 L238.2,72.8 L266.1,92.8 L282.9,113.0 L299.7,68.2 L316.5,97.5 L372.4,63.4 L389.2,78.6 L406.0,78.4 L433.9,77.3 L459.5,97.1 L485.9,137.1 L506.6,114.4 L526.6,94.9 L540.2,79.4 L551.4,87.3 L584.9,85.4 L601.7,99.7 L645.7,103.9 L652.9,150.6 L673.6,110.5" fill="none" stroke="#8EA197" stroke-opacity=".6" stroke-width="2" stroke-linejoin="round"/>
+<circle cx="72.0" cy="323.1" r="5" fill="#FFC247" stroke="#16211C" stroke-width="2"><title>11.08.2024: 10.05 км, темп 8:56/км</title></circle>
+<circle cx="77.6" cy="170.4" r="5" fill="#FFC247" stroke="#16211C" stroke-width="2"><title>18.08.2024: 9.00 км, темп 6:49/км</title></circle>
+<circle cx="82.4" cy="178.6" r="5" fill="#FFC247" stroke="#16211C" stroke-width="2"><title>24.08.2024: 10.13 км, темп 6:55/км</title></circle>
+<circle cx="105.5" cy="141.9" r="5" fill="#FFC247" stroke="#16211C" stroke-width="2"><title>22.09.2024: 10.01 км, темп 6:25/км</title></circle>
+<circle cx="127.9" cy="109.2" r="5" fill="#FFC247" stroke="#16211C" stroke-width="2"><title>20.10.2024: 10.01 км, темп 5:58/км</title></circle>
+<circle cx="139.9" cy="98.1" r="5" fill="#FFC247" stroke="#16211C" stroke-width="2"><title>04.11.2024: 10.01 км, темп 5:48/км</title></circle>
+<circle cx="161.5" cy="107.1" r="5" fill="#FFC247" stroke="#16211C" stroke-width="2"><title>01.12.2024: 10.09 км, темп 5:56/км</title></circle>
+<circle cx="186.2" cy="124.5" r="5" fill="#FFC247" stroke="#16211C" stroke-width="2"><title>01.01.2025: 10.03 км, темп 6:10/км</title></circle>
+<circle cx="221.4" cy="91.6" r="5" fill="#FFC247" stroke="#16211C" stroke-width="2"><title>14.02.2025: 10.00 км, темп 5:43/км</title></circle>
+<circle cx="238.2" cy="72.8" r="5" fill="#FFC247" stroke="#16211C" stroke-width="2"><title>07.03.2025: 10.02 км, темп 5:27/км</title></circle>
+<circle cx="266.1" cy="92.8" r="5" fill="#FFC247" stroke="#16211C" stroke-width="2"><title>11.04.2025: 10.02 км, темп 5:44/км</title></circle>
+<circle cx="282.9" cy="113.0" r="5" fill="#FFC247" stroke="#16211C" stroke-width="2"><title>02.05.2025: 10.01 км, темп 6:01/км</title></circle>
+<circle cx="299.7" cy="68.2" r="5" fill="#FFC247" stroke="#16211C" stroke-width="2"><title>23.05.2025: 10.01 км, темп 5:23/км</title></circle>
+<circle cx="316.5" cy="97.5" r="5" fill="#FFC247" stroke="#16211C" stroke-width="2"><title>13.06.2025: 10.02 км, темп 5:48/км</title></circle>
+<circle cx="372.4" cy="63.4" r="5" fill="#FFC247" stroke="#16211C" stroke-width="2"><title>22.08.2025: 10.01 км, темп 5:19/км</title></circle>
+<circle cx="389.2" cy="78.6" r="5" fill="#FFC247" stroke="#16211C" stroke-width="2"><title>12.09.2025: 10.01 км, темп 5:32/км</title></circle>
+<circle cx="406.0" cy="78.4" r="5" fill="#FFC247" stroke="#16211C" stroke-width="2"><title>03.10.2025: 10.02 км, темп 5:32/км</title></circle>
+<circle cx="433.9" cy="77.3" r="5" fill="#FFC247" stroke="#16211C" stroke-width="2"><title>07.11.2025: 10.01 км, темп 5:31/км</title></circle>
+<circle cx="459.5" cy="97.1" r="5" fill="#FFC247" stroke="#16211C" stroke-width="2"><title>09.12.2025: 10.01 км, темп 5:48/км</title></circle>
+<circle cx="485.9" cy="137.1" r="5" fill="#FFC247" stroke="#16211C" stroke-width="2"><title>11.01.2026: 10.01 км, темп 6:21/км</title></circle>
+<circle cx="506.6" cy="114.4" r="5" fill="#FFC247" stroke="#16211C" stroke-width="2"><title>06.02.2026: 11.52 км, темп 6:02/км</title></circle>
+<circle cx="526.6" cy="94.9" r="5" fill="#FFC247" stroke="#16211C" stroke-width="2"><title>03.03.2026: 10.01 км, темп 5:46/км</title></circle>
+<circle cx="540.2" cy="79.4" r="5" fill="#FFC247" stroke="#16211C" stroke-width="2"><title>20.03.2026: 10.04 км, темп 5:33/км</title></circle>
+<circle cx="551.4" cy="87.3" r="5" fill="#FFC247" stroke="#16211C" stroke-width="2"><title>03.04.2026: 10.14 км, темп 5:39/км</title></circle>
+<circle cx="584.9" cy="85.4" r="5" fill="#FFC247" stroke="#16211C" stroke-width="2"><title>15.05.2026: 10.68 км, темп 5:38/км</title></circle>
+<circle cx="601.7" cy="99.7" r="5" fill="#FFC247" stroke="#16211C" stroke-width="2"><title>05.06.2026: 11.05 км, темп 5:50/км</title></circle>
+<circle cx="645.7" cy="103.9" r="5" fill="#FFC247" stroke="#16211C" stroke-width="2"><title>30.07.2026: 10.66 км, темп 5:53/км</title></circle>
+<circle cx="652.9" cy="150.6" r="5" fill="#FFC247" stroke="#16211C" stroke-width="2"><title>08.08.2026: 10.16 км, темп 6:32/км</title></circle>
+<circle cx="673.6" cy="110.5" r="5" fill="#FFC247" stroke="#16211C" stroke-width="2"><title>03.09.2026: 11.05 км, темп 5:59/км</title></circle>
+<text x="84.0" y="328.1" text-anchor="start" font-size="13" fill="#E6ECE4">11.08.2024 · 8:55/км, с переходами на шаг</text>
+<text x="372.4" y="49.4" text-anchor="middle" font-size="13" fill="#E6ECE4">22.08.2025 · 5:19/км, лучшее (53:18)</text>
+<text x="64" y="24" font-size="13" font-weight="600" fill="#E6ECE4">Средний темп на десятке, мин/км (выше — быстрее)</text>
+</svg>
