@@ -265,6 +265,9 @@ def build_index(posts):
         weather = {"run": run.strftime("%Y-%m-%dT%H:%M"), "temp": 6, "feels": 3, "precip_prob": 20,
                    "wind": 4, "text": "пасмурно", "tips": []}
     weather_html = render_weather(weather, run)
+    if weather:  # копия прогноза в сборке: fetch_weather возьмёт её, если Open-Meteo не ответит
+        (OUT / "weather.json").parent.mkdir(parents=True, exist_ok=True)
+        (OUT / "weather.json").write_text(json.dumps(weather, ensure_ascii=False, indent=2), encoding="utf-8")
     yandex = f"https://yandex.ru/maps/?pt={meet['lon']},{meet['lat']}&z=17&l=map"
 
     event = {

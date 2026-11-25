@@ -4,12 +4,13 @@
 Источник — Open-Meteo (https://open-meteo.com): бесплатно для некоммерческих сайтов,
 без ключа, данные по лицензии CC BY 4.0 (на сайте есть подпись с источником).
 Запрос делает GitHub при сборке, посетители сайта к Open-Meteo не обращаются.
-Результат — data/weather.json. Если сервис недоступен, прогноз на сайте просто не показывается.
+Результат — data/weather.json (сборка кладёт его копию в dist/weather.json). Если сервис не ответил
+с трёх попыток, берётся прогноз из прошлой сборки, если он на тот же четверг; иначе прогноз не показывается.
 
 Запуск:  python scripts/fetch_weather.py
          python scripts/fetch_weather.py --json f   — разобрать сохранённый ответ (для проверки)
 """
-import datetime as dt, json, pathlib, sys, urllib.parse, urllib.request
+import datetime as dt, json, pathlib, subprocess, sys, time, urllib.parse, urllib.request
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 CFG = json.loads((ROOT / "config.json").read_text(encoding="utf-8"))
@@ -91,14 +92,38 @@ def summarize(data, run):
     return w
 
 
-def main():
+def previous():
+    """Прогноз из прошлой сборки (ветка site, файл weather.json) — на случай, если Open-Meteo не ответил."""
     try:
-        data = load(sys.argv)
-    except Exception as e:
-        print(f"[weather] Open-Meteo недоступен, прогноза не будет: {e}")
-        OUT.write_text("{}\n", encoding="utf-8")
-        return 0
-    w = summarize(data, next_run(dt.datetime.now(MSK))) or {}
+        subprocess.run(["git", "fetch", "-q", "--depth=1", "origin", "site"], cwd=ROOT, check=True,
+                       capture_output=True, timeout=60)
+        out = subprocess.run(["git", "show", "FETCH_HEAD:weather.json"], cwd=ROOT, check=True,
+                             capture_output=True, timeout=30).stdout
+        return json.loads(out.decode("utf-8"))
+    except Exception:
+        return {}
+
+
+def main():
+    run = next_run(dt.datetime.now(MSK))
+    data, err = None, None
+    for attempt, pause in enumerate((0, 10, 30)):  # Open-Meteo иногда отвечает ошибкой или лимитом: три попытки
+        time.sleep(pause)
+        try:
+            data = load(sys.argv)
+            break
+        except Exception as e:
+            err = e
+            print(f"[weather] попытка {attempt + 1}: Open-Meteo недоступен: {e}")
+    w = summarize(data, run) if data else None
+    if not w:
+        old = previous()
+        if old.get("run") == run.strftime("%Y-%m-%dT%H:%M"):
+            w = old  # прошлый прогноз на тот же четверг; на сайте видно, когда он обновлялся
+            print(f"[weather] беру прогноз из прошлой сборки (обновлён {old.get('updated')})")
+        else:
+            print(f"[weather] прогноза не будет: {err}")
+            w = {}
     OUT.parent.mkdir(exist_ok=True)
     OUT.write_text(json.dumps(w, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"[weather] {w.get('run')}: {w.get('temp')}°C, {w.get('text')}, осадки {w.get('precip_prob')}%")
